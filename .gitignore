@@ -1,0 +1,19 @@
+*/node_modules
+
+*/reports
+*/reports/*
+*/dist
+*/dist/*
+
+*/yarn.lock
+*/.env
+
+*.tfvars
+.terraform
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.lock.hd
+
+vars.yml
