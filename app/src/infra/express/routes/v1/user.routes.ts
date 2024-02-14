@@ -4,6 +4,7 @@ import {
   getUserControllerFactory,
   refreshTokenControllerFactory,
   resendEmailControllerFactory,
+  updateUserControllerFactory,
   validataEmailControllerFactory,
 } from '@main/factories/user_module.factory';
 import { userEnsureAuthenticated } from '@infra/express/middleware/user_ensure_authenticated';
@@ -21,10 +22,11 @@ userRoutes.patch(
   adaptRoute(validataEmailControllerFactory),
 );
 userRoutes.post('/authenticate/email', adaptRoute(resendEmailControllerFactory));
+userRoutes.post('/authenticate/refresh', adaptRoute(refreshTokenControllerFactory));
 
 userRoutes.use(adapterMiddleware(userEnsureAuthenticated));
 
 userRoutes.get('/', adaptRoute(getUserControllerFactory));
-userRoutes.post('/authenticate/refresh', adaptRoute(refreshTokenControllerFactory));
+userRoutes.put('/:user_id', adaptRoute(updateUserControllerFactory));
 
 export { userRoutes };

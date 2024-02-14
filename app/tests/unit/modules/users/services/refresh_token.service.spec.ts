@@ -3,6 +3,7 @@ import { RefreshTokenService } from '@modules/user/services/refresh_token.servic
 import { UserToken } from '@modules/user/domains/user_token.domain';
 import { User } from '@modules/user/domains/user.domain';
 import { rightResponse } from '@tests/mocks/responses';
+import { timeInMillisecond } from '@configs/timestamp';
 import { SuccessfulResponse } from '@infra/either';
 
 const mockUserRepository = MockUserRepository.getInstance();
@@ -29,7 +30,7 @@ describe('Refresh user login service', () => {
       user_id: 'any_user_id',
       type: 'refresh_token',
       is_active: true,
-      valid_till: new Date(),
+      valid_till: new Date(Date.now() + timeInMillisecond.hours),
       created_at: new Date(),
     });
 
@@ -47,12 +48,9 @@ describe('Refresh user login service', () => {
 
     const resp = await refreshTokenService.execute({
       refresh_token: user_token.token,
-      user_id: user.id,
     });
 
     const user_resp = resp.map((user) => user).user;
-
-    console.log('user_resp', resp);
 
     expect(resp.isRight()).toBeTruthy();
     expect(user_resp.id).toBeDefined();

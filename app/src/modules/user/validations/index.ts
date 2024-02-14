@@ -14,3 +14,12 @@ export const authenticate_user_validation = celebrate({
     password: Joi.string().required(),
   }),
 });
+
+export const updateUserValidation = celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string(),
+  }),
+  [Segments.PARAMS]: Joi.object().keys({
+    user_id: Joi.string().required(),
+  }),
+});

@@ -11,7 +11,6 @@ import { AppError } from '@infra/errors';
 
 interface RequestInterface {
   refresh_token: string;
-  user_id: string;
 }
 
 interface ResponseInterface {
@@ -34,23 +33,25 @@ export class RefreshTokenService {
   }
 
   async execute(data: RequestInterface): Promise<Either<AppError, ResponseInterface>> {
-    const { user_id, refresh_token } = data;
-
-    const userResp = await this._userRepository.findOne({ id: user_id });
+    const { refresh_token } = data;
 
     const refresh_token_exist = await this._userRepository.findToken(
       refresh_token,
       'refresh_token',
     );
 
+    const token = refresh_token_exist.map((token) => token);
+
+    if (refresh_token_exist.isLeft() || !token.is_valid()) {
+      return left(new InvalidTokenError('Invalid token'));
+    }
+
+    const userResp = await this._userRepository.findOne({ id: token.user_id });
+
     const user = userResp.map((user) => user).value;
 
     if (userResp.isLeft() || !user) {
       return left(new BadRequestError('User not found'));
-    }
-
-    if (refresh_token_exist.isLeft() || !refresh_token_exist) {
-      return left(new InvalidTokenError('Invalid token'));
     }
 
     if (!user.email_verified) {
@@ -62,7 +63,7 @@ export class RefreshTokenService {
       user_name: user.name,
     };
 
-    await this._userRepository.disableToken(refresh_token_exist.map((token) => token));
+    await this._userRepository.disableToken(token);
 
     const new_refresh_token = UserToken.create({
       type: 'refresh_token',
@@ -77,7 +78,7 @@ export class RefreshTokenService {
 
     await this._userRepository.createToken(new_refresh_token);
 
-    const token = JSONWebToken.sign(
+    const new_jwt_token = JSONWebToken.sign(
       token_payload,
       auth_config.secreteKey,
       auth_config.expireIn,
@@ -85,7 +86,7 @@ export class RefreshTokenService {
 
     return right({
       user: UserMap.domainToWeb(user),
-      token,
+      token: new_jwt_token,
       refresh_token: new_refresh_token.token,
     });
   }

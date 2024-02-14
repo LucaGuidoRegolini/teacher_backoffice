@@ -28,7 +28,7 @@ module.exports = {
       statements: 85,
     },
   },
-  bail: false,
+  bail: true,
   clearMocks: true,
   collectCoverageFrom: [
     '<rootDir>/src/modules/**/services/*.ts',

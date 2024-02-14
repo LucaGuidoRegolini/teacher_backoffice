@@ -25,11 +25,9 @@ export class RefreshTokenController implements WebControllerInterface {
     request: HttpRequestInterface,
   ): Promise<Either<AppError, HttpResponseInterface>> {
     const { refresh_token } = request.body;
-    const { user_id } = request.user;
 
     const userOrError = await this._refreshTokenService.execute({
       refresh_token,
-      user_id,
     });
 
     if (userOrError.isLeft()) {

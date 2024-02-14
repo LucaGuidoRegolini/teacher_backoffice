@@ -15,7 +15,7 @@ export class UserToken extends Domain {
     this._token = data.token;
     this._type = data.type;
     this._user_id = data.user_id;
-    this._is_active = data.is_active || true;
+    this._is_active = data.is_active === false ? false : true;
     this._valid_till = data.valid_till;
     this._created_at = data.created_at;
   }

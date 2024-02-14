@@ -3,12 +3,14 @@ import { AuthenticateUserController } from '@modules/user/controllers/authentica
 import { ValidataEmailController } from '@modules/user/controllers/validata_email.controller';
 import { ResendEmailController } from '@modules/user/controllers/resend_email.controller';
 import { CreateUserController } from '@modules/user/controllers/create_user.controller';
+import { UpdateUserController } from '@modules/user/controllers/update_user.controller';
 import { AuthenticateUserService } from '@modules/user/services/authentication.service';
 import { RefreshTokenService } from '@modules/user/services/refresh_token.service';
 import { GetUserController } from '@modules/user/controllers/get_user.controller';
 import { ValidataEmailService } from '@modules/user/services/valid_email.service';
 import { ResendEmailService } from '@modules/user/services/resend_email.service';
 import { CreateUserService } from '@modules/user/services/create_user.service';
+import { UpdateUserService } from '@modules/user/services/update_user.service';
 import { GetUserService } from '@modules/user/services/get_user.service';
 import { userRepositoryFactory } from './repositories.factory';
 import { MailProviderAdapterFactory } from './email.factory';
@@ -65,4 +67,12 @@ export function resendEmailServiceFactory(): ResendEmailService {
 
 export function resendEmailControllerFactory(): ResendEmailController {
   return ResendEmailController.getInstance(resendEmailServiceFactory());
+}
+
+export function updateUserServiceFactory(): UpdateUserService {
+  return UpdateUserService.getInstance(userRepositoryFactory());
+}
+
+export function updateUserControllerFactory(): UpdateUserController {
+  return UpdateUserController.getInstance(updateUserServiceFactory());
 }

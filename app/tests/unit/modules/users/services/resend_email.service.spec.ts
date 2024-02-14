@@ -61,8 +61,6 @@ describe('Resend email service', () => {
 
     const userCreated = await resendEmailService.execute(user);
 
-    console.log('userCreated', userCreated);
-
     expect(userCreated.isLeft()).toBeTruthy();
     expect(userCreated.value).toBeInstanceOf(InvalidTokenError);
   });
