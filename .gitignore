@@ -17,3 +17,6 @@
 *.lock.hd
 
 vars.yml
+
+command.txt
+*/.terraform.lock.hcl

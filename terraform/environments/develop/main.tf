@@ -4,7 +4,7 @@ module "dev" {
   aplication-name = "teacher-backoffice"
     environment = "dev"
     region_aws = "us-east-1"
-    repository_name = "teacher-backoffice"
+    repository_name = "teacher_backoffice"
     aplication_port = 3000
     instance_ami_aws = "ami-0fc5d935ebf8bc3bc"
     instance_type_aws = "t2.micro"
