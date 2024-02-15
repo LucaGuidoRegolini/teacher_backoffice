@@ -2,24 +2,27 @@ version: '3.7'
 
 services:
   database-container:
-    image: postgres:alpine
+    image: mongo:latest
     restart: always
     container_name: database-container
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: development
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
     ports:
-      - 5432:5432
+      - 27017:27017
 
   project:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - DATABASE_URL=postgres://postgres:postgres@database-container:5432/development
+        - MONGO_URL=mongodb://root:root@database-container:27017
         - JWT_SECRET=secret
         - APP_PORT=3000
+        - BRAVE_SMTP_HOST=smtp-relay.brevo.com
+        - BRAVE_SMTP_PORT=587
+        - BRAVE_SMTP_USER=lucagregolini@gmail.com
+        - BRAVE_SMTP_PASS=0WmN4LTztqVCrgfF
     container_name: project
     ports:
       - 3000:3000

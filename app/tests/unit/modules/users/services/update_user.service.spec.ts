@@ -31,13 +31,12 @@ describe('Update user service', () => {
     });
 
     mockUserRepository.findOne = rightResponse(new SuccessfulResponse(user));
+    mockUserRepository.update = rightResponse(new SuccessfulResponse(user));
 
     const userCreated = await updateUserService.execute({
       name: 'new_name',
       user_id: 'any_user_id',
     });
-
-    console.log(userCreated);
 
     const new_user = userCreated.map((user) => user);
 

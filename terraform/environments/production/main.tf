@@ -1,0 +1,21 @@
+module "prod" {
+  source = "../../infra"
+
+  aplication-name = "teacher-backoffice"
+    environment = "prod"
+    region_aws = "us-east-1"
+    repository_name = "teacher-backoffice"
+    aplication_port = 3000
+    instance_ami_aws = "ami-0fc5d935ebf8bc3bc"
+    instance_type_aws = "t2.micro"
+    max_size = 2
+    min_size = 1
+    is_prduction = true
+
+    AWS_ACCESS_KEY_ID = var.TF_VAR_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY = var.TF_VAR_AWS_SECRET_ACCESS_KEY
+    AWS_REGION = var.TF_VAR_AWS_REGION
+    AWS_USER_ID = var.TF_VAR_AWS_USER_ID
+    ssh_key_public = var.TF_VAR_ssh_key_public
+}
+

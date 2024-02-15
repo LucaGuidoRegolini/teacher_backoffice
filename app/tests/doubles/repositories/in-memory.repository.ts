@@ -4,9 +4,11 @@ import {
   ListRequestInterface,
   ListResponseInterface,
 } from '@shared/repository/repository.interface';
+import { ClasseRepositoryInterface } from '@modules/classes/repositories/classe.repository.interface';
 import { UserRepositoryInterface } from '@modules/user/repositories/user.repository.interface';
 import { Either, SuccessfulResponse, left, right } from '@infra/either';
 import { UserToken } from '@modules/user/domains/user_token.domain';
+import { Classe } from '@modules/classes/domains/classe.domain';
 import { BadRequestError } from '@infra/errors/http_errors';
 import { User } from '@modules/user/domains/user.domain';
 import { AppError } from '@infra/errors';
@@ -129,4 +131,82 @@ class MockUserRepository implements UserRepositoryInterface {
   }
 }
 
-export { MockUserRepository };
+class MockClasseRepository implements ClasseRepositoryInterface {
+  static classeCollection: Classe[] = [];
+  private constructor() {}
+
+  public static getInstance(): MockClasseRepository {
+    return new MockClasseRepository();
+  }
+
+  async create(item: Classe): Promise<Either<AppError, SuccessfulResponse<Classe>>> {
+    const classe = new Classe(item);
+    MockClasseRepository.classeCollection.push(classe);
+    return right(new SuccessfulResponse(classe));
+  }
+  async update(
+    id: string,
+    item: Partial<Classe>,
+    retry?: number | undefined,
+  ): Promise<Either<AppError, SuccessfulResponse<Partial<Classe>>>> {
+    const classe = MockClasseRepository.classeCollection.find(
+      (classe) => classe.id === id,
+    );
+    if (!classe) {
+      return left(new BadRequestError('Classe not found'));
+    }
+    Object.assign(classe, item);
+    MockClasseRepository.classeCollection.push(classe);
+    return right(new SuccessfulResponse(item));
+  }
+  async delete(id: string): Promise<Either<AppError, SuccessfulResponse<string>>> {
+    const classe = MockClasseRepository.classeCollection.find(
+      (classe) => classe.id === id,
+    );
+    if (!classe) {
+      return left(new BadRequestError('Classe not found'));
+    }
+    MockClasseRepository.classeCollection = MockClasseRepository.classeCollection.filter(
+      (user) => user.id !== id,
+    );
+    return right(new SuccessfulResponse(id));
+  }
+  async findOne(
+    filter: Partial<Classe>,
+  ): Promise<Either<AppError, SuccessfulResponse<Classe | undefined>>> {
+    const classe = MockClasseRepository.classeCollection.find(
+      (classe) => classe.title === classe.title,
+    );
+    if (!classe) {
+      return left(new BadRequestError('Classe not found'));
+    }
+    return right(new SuccessfulResponse(classe));
+  }
+  async index(
+    data: IndexRequestInterface<Classe>,
+  ): Promise<Either<AppError, IndexResponseInterface<Classe>>> {
+    const classe = MockClasseRepository.classeCollection;
+
+    return right({
+      data: classe,
+      total: classe.length,
+    });
+  }
+  async list(
+    data: ListRequestInterface<Classe>,
+  ): Promise<Either<AppError, ListResponseInterface<Classe>>> {
+    const classe = MockClasseRepository.classeCollection;
+
+    return right({
+      data: classe,
+      total: classe.length,
+      limit: data.limit || 10,
+      page: data.page || 1,
+      filter: data.filter,
+      order: data.order,
+      orderBy: data.orderBy,
+    });
+  }
+}
+
+export { MockClasseRepository, MockUserRepository };

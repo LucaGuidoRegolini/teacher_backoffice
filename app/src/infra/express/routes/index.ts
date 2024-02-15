@@ -7,7 +7,7 @@ const appRoutes = Router();
 
 appRoutes.get('/', (_, res) => {
   res.json({
-    project: 'farmer_registration_api',
+    project: 'teacher_backoffice_api',
     version: '1.0.0',
   });
 });
